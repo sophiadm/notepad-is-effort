@@ -1,6 +1,8 @@
-# notepad-is-effort
+# notepad-is-effort. Built for C, written in python
 
-This is great for lazy people who are sick of repeated;y compiling using the command line but don't want to dowload a fully featured editor.
+This is great for lazy people who are sick of repeatedly compiling using the command line but don't want to dowload a fully featured editor.
+
+It has features like syntax highlighting and allows you to find indexes quickly.
 
 This project is compatible with windows 10.
 It has not been tested on other operating systems
