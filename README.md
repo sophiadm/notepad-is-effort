@@ -1,5 +1,7 @@
 # notepad-is-effort
 
+This is great for lazy people who are sick of repeated;y compiling using the command line but don't want to dowload a fully featured editor.
+
 This project is compatible with windows 10.
 It has not been tested on other operating systems
 
