@@ -2,17 +2,27 @@ import tkinter as tk
 import tkinter.messagebox, tkinter.font
 import os, sys, webbrowser, subprocess, time
 
+'''
+A small portable IDE for C
+Developed by Sophiadm
+
+'''
 class StartApp():
     def __init__(self, **kwargs):
+
+        #Makes master window
         self.master = tk.Tk()
         self.master.wm_title("Notepad is effort")
 
+        #Sets it to full screen automatically
         self.master.geometry("{0}x{1}+0+0".format(
             self.master.winfo_screenwidth(), self.master.winfo_screenheight()))
-        
+
+        #Creates instances of the navbar and text box classes
         self.text = TextInput(self.master)
         self.navbar = Navbar(self.master, self.text)
 
+        #Starts the app
         self.master.mainloop()
         
 class Navbar():
@@ -24,18 +34,18 @@ class Navbar():
         self.nav = tk.Menu(self.master)
         self.master.config(menu=self.nav)
 
+        #Creates top level nav buttons
         file = tk.Menu(self.nav)
         edit = tk.Menu(self.nav)
         run = tk.Menu(self.nav)
-        custom = tk.Menu(self.nav)
         help_ = tk.Menu(self.nav)
 
 
         self.nav.add_cascade(label='File', menu=file)
         file.add_command(label='Save', command= self.Save)
         file.add_command(label='Save As', command=lambda: self.popup(self.Save_as, 'Save As'))
-        file.add_command(label='Open', command=lambda: self.popup(self.Open, 'Open'))
-        file.add_command(label='Open new', command=self.Opennew)
+        file.add_command(label='Open', command=self.Opennew)
+        file.add_command(label='Add code', command=lambda: self.popup(self.Open, 'Open'))
         file.add_command(label='New', command=StartApp)        
         file.add_command(label='Exit', command=self.Exit)
 
@@ -50,52 +60,62 @@ class Navbar():
 
         self.nav.add_cascade(label='Help', menu=help_)
         help_.add_command(label='Search Index', command=lambda: self.popup(self.findindex, 'Search index', 'Enter the index'))
-        help_.add_command(label='Python docs', command=lambda: self.google('http://devdocs.io/c/'))
+        help_.add_command(label='Documentation', command=lambda: self.google('http://devdocs.io/c/'))
         help_.add_command(label='S Overflow', command=lambda: self.google('http://stackoverflow.com/questions/ask'))
 
+        #Binds keys to functions
         self.master.bind("<Control-s>", self.Save)
-        self.master.bind("<Control-o>", lambda x: self.popup(self.Open, 'Open'))
+        self.master.bind("<Control-o>", self.Opennew)
         self.master.bind("<Control-n>", StartApp)
+        self.master.bind("<Control-q", self.Exit)
         self.master.bind("<F5>", self.Run)
 
     def Save(self, e=1):
-        if self.filepath != None:
+        if self.filepath != None: #Checks if it knows file location
             contents = self.text.TextBox.get('1.0', tk.END)
 
             f = open(self.filepath, 'w') # to clear the file
             f.write(contents)
             f.close()
-        else:
-            self.popup(self.Save_as, 'Save As')
+        else: #If it hasn't already been saved/opened
+            self.popup(self.Save_as, 'Save As') 
             
     def popup(self, command, title, Text='Please enter the file directory and name: '):
+        #makes a second window
         self.master2 = tk.Tk()
         self.master2.title(title)
 
+        #Asks question arg
         self.label2 = tk.Label(self.master2, bg='white', fg='black', text=Text)
         self.label2.pack(side=tk.TOP)
 
-        #dir_path = os.path.dirname(os.path.realpath(__file__)) + '\\file.py'
-        dir_path = 'C:\\Users\\sophi\\Documents\\Programming\\C\\Hey.c'
+        dir_path = os.path.abspath() + 'hey.c'
+
+        #Makes an input box for answer
         self.entry2 = tk.Entry(self.master2, bg='white', fg='black')
+        
         if Text == 'Please enter the file directory and name: ':            
             self.entry2.insert(tkinter.END, dir_path)
         self.entry2.pack(side=tkinter.LEFT, fill=tk.BOTH, expand=1)
 
         self.button2 = tk.Button(self.master2, text='ok', bg='white', fg='black', command=command).pack(side=tkinter.LEFT)
+        self.master2.bind("<Return>", command)
 
     def Save_as(self, rerun=None):
+        #Uses second window to save file as inputted name
         self.filepath = self.entry2.get()
         contents = self.text.TextBox.get("1.0", tk.END)
         
         if self.filepath[len(self.filepath) - 2:] != '.c':
             self.filepath += '.c'        
             
+        #Makes sure the file doesn't already exist
         if not os.path.exists(self.filepath):
+            
+            #Writes contents to text file
             f = open(self.filepath, 'w+')
             f.write(contents)
             f.close()
-            print('BEEP BEEP I JUST CREATED NEW FILE GO DELETE NOW')
             self.master2.destroy()
             
             if rerun:
