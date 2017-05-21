@@ -67,7 +67,7 @@ class Navbar():
         self.master.bind("<Control-s>", self.Save)
         self.master.bind("<Control-o>", self.Opennew)
         self.master.bind("<Control-n>", StartApp)
-        self.master.bind("<Control-q", self.Exit)
+        self.master.bind("<Control-q>", self.Exit)
         self.master.bind("<F5>", self.Run)
 
     def Save(self, e=1):
@@ -146,7 +146,7 @@ class Navbar():
             self.filepath = None
             self.label2['text'] = "That file doesn't exist"
             
-    def Opennew(self):
+    def Opennew(self, e=None):
         self.popup(self.Open, 'Open')
         self.text.TextBox.delete(1.0,tk.END)
         
